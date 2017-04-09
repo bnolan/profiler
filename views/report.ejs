@@ -1,0 +1,39 @@
+<h1>
+	Report
+</h1>
+
+<dl>
+	<dt>Branch</dt>
+	<dd><%= branch %></dd>
+
+	<dt>Created at</dt>
+	<dd><%= new Date() %></dd>
+
+	<dt>URL</dt>
+	<dd><%= url %></dd>
+
+	<dt>Selector</dt>
+	<dd><%= selector %></dd>
+
+	<dt>Score</dt>
+	<dd>85%</dd>
+</dl>
+
+<h3>Screenshot at load time</h3>
+
+<img src="datauri:..." />
+
+<h3>Payload size</h3>
+
+<dl>
+	<dt>KB</dt>
+	<dd><%= payloadSize %> <small>(Size over the network)</small></dd>
+	<dt>Time at 128kb/s</dt>
+	<dd><%= timeAt128 %></dd>
+	<dt>Percentage of target</dt>
+	<dd>50% of 500kb <small>(Lower percentages are better)</small></dd>
+</dl>
+
+<h3>v8 (javascript) time</h3>
+
+<%= javascriptTime %>
