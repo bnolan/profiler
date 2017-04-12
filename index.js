@@ -22,6 +22,7 @@ function Profiler (url, selector, callback) {
 
         if (javascriptRequests[params.requestId]) {
           javascriptRequests[params.requestId].length = params.encodedDataLength;
+          console.log(javascriptRequests[params.requestId].url);
         }
       });
 
@@ -30,7 +31,7 @@ function Profiler (url, selector, callback) {
         // console.log(params.request.url);
 
         const uri = URL.parse(params.request.url);
-        
+
         if(path.extname(uri.path) === '.js') {
           javascriptRequests[params.requestId] = {
             url: params.request.url
@@ -38,9 +39,39 @@ function Profiler (url, selector, callback) {
         }
       });
 
-      Page.loadEventFired(close);
+      // Page.loadEventFired(close);
       Network.clearBrowserCache(true);
+
+      // InspectorBackend.registerCommand("Network.setBlockedURLs", [], [], false);
+
+      const blockedURLs = [
+        'https://ads.trademe.co.nz*',
+        'http://partner.googleadservices.com*',
+        'https://munchkin.marketo.net*',
+        'http://tracker.marinsm.com*',
+        'https://www.googletagservices.com*',
+        'https://securepubads.g.doubleclick.net*',
+        'https://secure-nz.imrworldwide.com*',
+        'https://securepubads.g.doubleclick.net*',
+        'https://pagead2.googlesyndication.com*',
+        'https://www.googleadservices.com*'
+        // /google\.com\/ads/,
+        // /doubleclick\.net\//,
+        // /adsafeprotected\.com\//,
+        // /tracker\.marinsm\.com/,
+        // /secure-nz\.imrworldwide\.com/
+      ];
       Network.enable();
+
+      // chrome.send('Network.setBlockedURLs', blockedURLs, console.log);
+      // chrome.send('Network.addBlockedURL', {url: blockedURLs[0]}, console.log);
+
+      // Network.setBlockedURLs(blockedURLs);
+
+      blockedURLs.forEach((url) => {
+        console.log(`Blocking ${url}`);
+        Network.addBlockedURL({url: url});
+      });
 
       Page.enable();
 
@@ -153,12 +184,21 @@ function Profiler (url, selector, callback) {
         
         interval = setInterval(() => {
           pollingFunc();
-        }, 250);
+          // console.log('polling');
+        }, 15);
       }
 
       once('ready', function () {
-        Page.navigate({'url': url});
-        startPolling();
+        var polling = false;
+
+        Page.loadEventFired(() => {
+          if (!polling) {
+            startPolling();
+            polling = true;
+          }
+        });
+
+        Page.navigate({'url': url})
       });
     }
   }).on('error', function (e) {
@@ -204,4 +244,8 @@ app.get('/profile/new', (req, res) => {
 // console.log('Listening on port :3500');
 
 console.log('Profiling..');
-Profiler('https://preview.trademe.co.nz/', '#search-trade-me')
+// Profiler('https://preview.trademe.co.nz/', '#search-trade-me')
+
+Profiler('https://www.trademe.co.nz/', '#searchString')
+
+// Profiler('https://touch.trademe.co.nz/', '#SearchString')

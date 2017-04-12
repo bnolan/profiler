@@ -42,11 +42,11 @@ TimelineMetrics.prototype.processTracingRecord_ = function(e) {
             break;
         case 'E': // End Event
             if (typeof this.eventStacks[e.tid] === 'undefined' || this.eventStacks[e.tid].length === 0) {
-                debug('Encountered an end event that did not have a start event', e);
+                console.log('Encountered an end event that did not have a start event', e);
             } else {
                 var b = this.eventStacks[e.tid].pop();
                 if (b.name !== e.name) {
-                    debug('Start and end events dont have the same name', e, b);
+                    log('Start and end events dont have the same name', e, b);
                 }
                 this.addSummaryData_({
                     type: e.name,
