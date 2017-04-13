@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "tape tests/*.js && semistandard"
   },
   "author": "",
   "license": "ISC",
@@ -13,6 +13,8 @@
     "automated-chrome-profiling": "github:paulirish/automated-chrome-profiling",
     "ejs": "^2.5.6",
     "express": "^4.15.2",
-    "lodash": "^4.17.4"
+    "lodash": "^4.17.4",
+    "semistandard": "^10.0.0",
+    "tape": "^4.6.3"
   }
 }
