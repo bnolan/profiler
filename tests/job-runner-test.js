@@ -8,7 +8,7 @@ test('start', (t) => {
 
 test('task starts async', (t) => {
   t.plan(4);
-  
+
   var first = true;
 
   runner.enqueue((done) => {
@@ -16,8 +16,8 @@ test('task starts async', (t) => {
 
     done();
 
-    t.ok(runner.isIdle())
-    t.ok(runner.isEmpty())
+    t.ok(runner.isIdle());
+    t.ok(runner.isEmpty());
   });
 
   t.ok(first);
@@ -26,7 +26,7 @@ test('task starts async', (t) => {
 
 test('three tasks happen in order', (t) => {
   t.plan(6);
-  
+
   var i = 1;
 
   runner.enqueue((done) => {
@@ -61,4 +61,3 @@ test('stop', (t) => {
   runner.stop();
   t.end();
 });
-

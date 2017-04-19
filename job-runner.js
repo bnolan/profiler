@@ -29,7 +29,7 @@ module.exports = {
       console.log('Starting job.');
 
       // Start the job and pass the done callback into the job
-      runningJob(jobDone)
+      runningJob(jobDone);
     }, 250);
   },
 
@@ -50,4 +50,4 @@ module.exports = {
     // Add to the back of the queue
     jobQueue.push(task);
   }
-}
+};
