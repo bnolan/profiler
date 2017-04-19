@@ -14,6 +14,8 @@ test('loads trademe.co.nz', (t) => {
   profiler.generate('https://www.trademe.co.nz/', '#searchString', (err, result) => {
     t.ok(!err);
     t.ok(result);
+
+    console.log(JSON.stringify(result));
   });
 });
 

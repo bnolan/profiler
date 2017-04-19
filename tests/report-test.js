@@ -1,20 +1,13 @@
 const test = require('tape');
 const report = require('../report');
 const path = require('path');
+const fs = require('fs');
 
-const trace = path.join(__dirname, 'fixtures', 'trace.json');
-const reportJson = path.join(__dirname, 'fixtures', 'report.json');
+const trace = fs.readFileSync(path.join(__dirname, 'fixtures', 'trace.json'));
 
 test('report', (t) => {
-  report({
-    branch: 'master',
-    url: 'http://examples.com/',
-    selector: 'a',
-    filename: trace,
-    payloadSize: 42,
-    javascriptTime: 1.414,
-    longFrames: []
-  }, (err, html) => {
+  console.log(trace.length);
+  report(trace, (err, html) => {
     t.ok(!err);
     t.ok(html);
 

@@ -6,7 +6,11 @@ const summary = require('./summarize')
 const _ = require('lodash');
 const spawn = require('child_process').spawn;
 
+var outputPath = path.join(__dirname, 'profiles');
+
 var browser;
+
+const TRACE_CATEGORIES = ["-*", "devtools.timeline", "disabled-by-default-devtools.timeline", "disabled-by-default-devtools.timeline.frame", "toplevel", "blink.console", "disabled-by-default-devtools.timeline.stack", "disabled-by-default-devtools.screenshot", "disabled-by-default-v8.cpu_profile", "disabled-by-default-v8.cpu_profiler", "disabled-by-default-v8.cpu_profiler.hires"];
 
 module.exports = {
   start: (callback) => {
@@ -41,7 +45,7 @@ module.exports = {
       const javascriptRequests = {};
 
       global.log = console.log.bind(console);
-      
+
       with (chrome) {
         Network.loadingFinished((params) => {
           // console.log(params.encodedDataLength + ' bytes for ' + params.requestId);
@@ -102,44 +106,17 @@ module.exports = {
         Page.enable();
 
         Tracing.start({
-          // "categories": TRACE_CATEGORIES.join(','),
+          "categories": TRACE_CATEGORIES.join(','),
           "options": "sampling-frequency=100"  // 1000 is default and too slow.
         });
 
         var rawEvents = [];
 
         Tracing.tracingComplete(function () {
-          console.log('Tracing#tracingComplete');
-           var file = 'profile-' + Date.now() + '.devtools.trace';
-           fs.writeFileSync(file, JSON.stringify(rawEvents, null, 2));
-            // console.log('Trace file: ' + file);
-            // console.log('You can open the trace file in DevTools Timeline panel. (Turn on experiment: Timeline tracing based JS profiler)\n')
+            console.log('Tracing#tracingComplete');
+            callback(false, rawEvents);
 
-            var events = summary.report(file); // superfluous
-
-            var grouped = _.groupBy(events, (event) => {
-              return Object.keys(event)[0].split(/[:.]/)[0];
-            });
-
-            const payloadSize = 1234;
-
-            const data = {
-              grouped: grouped,
-              branch: 'default',
-              createdAt: new Date(),
-              url: url,
-              selector: selector,
-              payloadSize: payloadSize,
-              timeAt128: _.payloadSize / 128,
-              javascriptTime: _.sumBy(grouped['v8'], (pair) => _.values(pair)[0].sum),
-              _: _
-            };
-
-            const options = {
-            };
-
-            callback(false, data);
-
+            fs.writeFileSync('/tmp/boop.json', JSON.stringify(rawEvents));
             chrome.close();
         });
 
